@@ -1,0 +1,7 @@
+# Project exclude paths
+/common/target/
+/details/target/
+/discovery/target/
+/gateway/target/
+/search/target/
+/target/
