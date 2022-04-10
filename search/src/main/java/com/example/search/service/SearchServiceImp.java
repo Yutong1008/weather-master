@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-
 @Service
 public class SearchServiceImp implements SearchService{
     private final RestTemplate restTemplate;
@@ -30,24 +28,44 @@ public class SearchServiceImp implements SearchService{
             }
             return ans;
     }
-
     @Override
     public Map<String, Map> getWeatherById(int id) {
         Map<String,Map> weatherMap = restTemplate.getForObject("https://www.metaweather.com/api/location/"+ id, HashMap.class);
         return weatherMap;
     }
-
     @Override
-    public List<Map> getWeather(String cities) {
-        String[] cityArray = cities.split(",");
+    //String city = "chicago,santa monica, new york"
+    public List<Map> getWeather(String city) {
+        String[] cityArray = city.split(",");
 //            List<String> cities = new ArrayList<>();
 //            cities.addAll(Arrays.asList(cityArray));
-        for (String s: cityArray){
-
-        }
+        List<City[]> cityList = new ArrayList<>();
         List<List<Integer>> citiesList = new ArrayList<>();
-        List<Map<String,Map>>
-
+        for (String s: cityArray) {
+            City[] cities = restTemplate.getForObject("https://www.metaweather.com/api/location/search/?query= " + s, City[].class);
+            cityList.add(cities);
+        }
+        for (City[] key : cityList) {
+            List<Integer> cityId = new ArrayList<>();
+            for (City c : key) {
+                if (c != null && c.getWoeid() != null) {
+                    cityId.add(c.getWoeid());
+                }
+            }
+            citiesList.add(cityId);
+        }
+        List<Map> weatherList = new ArrayList<>();
+        for (List<Integer> tem : citiesList) {
+            for (int id : tem) {
+                weatherList.add(getWeatherById(id));
+            }
+        }
+        return weatherList;
     }
-
 }
+/*
+* idea:
+* 1. collect all the cities and split to a list of city[]
+* 2. for loop iterate all the cities get ids of cities
+* 3.
+* */
