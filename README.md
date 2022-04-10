@@ -1,6 +1,9 @@
 # weather-master
 
-This is Yutong Guo's hw 4.
+This is Yutong Guo's hw 4. 
+
+Please check PostMan link for documentation:
+https://documenter.getpostman.com/view/20225471/UVyysCJ3
 
 Requirement:
    
