@@ -1,4 +1,4 @@
-package com.example.search.Futures;
+package com.example.search.future;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;

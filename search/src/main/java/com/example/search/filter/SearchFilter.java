@@ -43,16 +43,7 @@ public class SearchFilter implements Filter{
 
             RequestCorrelation.setId(correlatedID);
         }
-
         filterChain.doFilter(request, servletResponse);
-
-//        HttpServletResponse response = (HttpServletResponse) servletResponse;
-//        LOGGER.info("Logging Request  {} : {}", request.getMethod(), request.getRequestURI());
-
-        //call next filter in the filter chain
-//        filterChain.doFilter(request, response);
-
-//        LOGGER.info("Logging Response :{}", response.getContentType());
     }
     private boolean currentRequestIsAsyncDispatcher(HttpServletRequest httpServletRequest) {
         return httpServletRequest.getDispatcherType().equals(DispatcherType.ASYNC);

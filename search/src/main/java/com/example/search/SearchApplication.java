@@ -1,7 +1,8 @@
 package com.example.search;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
@@ -19,13 +20,23 @@ public class SearchApplication {
     }
 
     public static void main(String[] args) {
-//        Logger logger = LoggerFactory.getLogger(SearchApplication.class);
         SpringApplication.run(SearchApplication.class, args);
-//        logger.debug("This is a debug message");
-//        logger.info("This is an info message");
-//        logger.warn("This is a warn message");
-//        logger.error("This is an error message");
     }
+    @Bean
+    public OpenAPI openApiConfig() {
+        return new OpenAPI().info(apiInfo());
+    }
+
+    public Info apiInfo() {
+        Info info = new Info();
+        info
+                .title("Live Code API")
+                .description("Live Code System Swagger Open API")
+                .version("v1.0.0");
+        return info;
+    }
+
+
 }
 
 

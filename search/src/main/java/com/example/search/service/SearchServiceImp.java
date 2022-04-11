@@ -1,6 +1,7 @@
 package com.example.search.service;
 
 import com.example.search.dto.City;
+import com.example.search.exception.CityNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,8 @@ public class SearchServiceImp implements SearchService{
 //        Map<String, String> cityMap = Collections.singletonMap("Malibu","Santa Monica");
             City[] cities = restTemplate.getForObject("https://www.metaweather.com/api/location/search/?query= " + city, City[].class);
             List<Integer> ans = new ArrayList<>();
-            for (City c : cities) {
+        assert cities != null;
+        for (City c : cities) {
                 if (c != null && c.getWoeid() != null) {
                     ans.add(c.getWoeid());
                 }
@@ -30,33 +32,42 @@ public class SearchServiceImp implements SearchService{
     }
     @Override
     public Map<String, Map> getWeatherById(int id) {
-        Map<String,Map> weatherMap = restTemplate.getForObject("https://www.metaweather.com/api/location/"+ id, HashMap.class);
+        Map<String, Map> weatherMap = restTemplate.getForObject("https://www.metaweather.com/api/location/" + id, HashMap.class);
         return weatherMap;
     }
     @Override
     //String city = "chicago,santa monica, new york"
-    public List<Map> getWeather(String city) {
-        String[] cityArray = city.split(",");
-//            List<String> cities = new ArrayList<>();
-//            cities.addAll(Arrays.asList(cityArray));
-        List<City[]> cityList = new ArrayList<>();
+    public List<Map> getWeather(String cities) {
+            List<Map> weatherList = new ArrayList<>();
+            String[] cityArray = cities.split(",");
+            //            List<String> cities = new ArrayList<>();
+            //            cities.addAll(Arrays.asList(cityArray));
+            List<City[]> cityList = new ArrayList<>();
+        for (String s : cityArray) {
+            City[] city = restTemplate.getForObject("https://www.metaweather.com/api/location/search/?query= " + s, City[].class);
+            cityList.add(city);
+        }
         List<List<Integer>> citiesList = new ArrayList<>();
-        for (String s: cityArray) {
-            City[] cities = restTemplate.getForObject("https://www.metaweather.com/api/location/search/?query= " + s, City[].class);
-            cityList.add(cities);
-        }
-        for (City[] key : cityList) {
+        for (City[] city : cityList) {
             List<Integer> cityId = new ArrayList<>();
-            for (City c : key) {
-                if (c != null && c.getWoeid() != null) {
-                    cityId.add(c.getWoeid());
+                for (City c : city) {
+                    if (c != null && c.getWoeid() != null) {
+                        cityId.add(c.getWoeid());
+                    }
                 }
-            }
-            citiesList.add(cityId);
+                citiesList.add(cityId);
         }
-        List<Map> weatherList = new ArrayList<>();
-        for (List<Integer> tem : citiesList) {
-            for (int id : tem) {
+//            for (City[] key : cityList) {
+//                List<Integer> cityId = new ArrayList<>();
+//                for (City c : key) {
+//                    if (c != null && c.getWoeid() != null) {
+//                        cityId.add(c.getWoeid());
+//                    }
+//                }
+//                citiesList.add(cityId);
+//            }
+        for (List<Integer> cityId : citiesList) {
+            for (int id : cityId) {
                 weatherList.add(getWeatherById(id));
             }
         }

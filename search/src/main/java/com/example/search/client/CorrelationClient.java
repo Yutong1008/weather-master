@@ -1,4 +1,4 @@
-package com.example.search.Client;
+package com.example.search.client;
 
 import com.example.search.filter.RequestCorrelation;
 import com.example.search.filter.SearchFilter;
