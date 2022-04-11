@@ -2,8 +2,10 @@
 
 This is Yutong Guo's hw 4. 
 
-Please check PostMan link for documentation:
-https://documenter.getpostman.com/view/20225471/UVyysCJ3
+Please check Swagger (http://localhost:9001/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/search-controller/queryWeatherByCity) 
+
+or PostMan link (https://documenter.getpostman.com/view/20225471/UVyysCJ3) for documentation.
+
 
 Requirement:
    
