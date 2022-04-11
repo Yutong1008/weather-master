@@ -11,6 +11,8 @@ import java.util.*;
 @Service
 public class SearchServiceImp implements SearchService{
     private final RestTemplate restTemplate;
+    public static final String queryWeatherByCity = "https://www.metaweather.com/api/location/search/?query=";
+    public static final String queryWeatherById = "https://www.metaweather.com/api/location/";
     @Autowired
     public SearchServiceImp (RestTemplate restTemplate){
         this.restTemplate = restTemplate;
@@ -20,10 +22,9 @@ public class SearchServiceImp implements SearchService{
     @Retryable(include = IllegalAccessError.class)
     public List<Integer> getWeatherByCity(String city) {
 //        Map<String, String> cityMap = Collections.singletonMap("Malibu","Santa Monica");
-            City[] cities = restTemplate.getForObject("https://www.metaweather.com/api/location/search/?query= " + city, City[].class);
+            City[] cities = restTemplate.getForObject(queryWeatherByCity + city, City[].class);
             List<Integer> ans = new ArrayList<>();
-        assert cities != null;
-        for (City c : cities) {
+            for (City c : cities) {
                 if (c != null && c.getWoeid() != null) {
                     ans.add(c.getWoeid());
                 }
@@ -32,11 +33,10 @@ public class SearchServiceImp implements SearchService{
     }
     @Override
     public Map<String, Map> getWeatherById(int id) {
-        Map<String, Map> weatherMap = restTemplate.getForObject("https://www.metaweather.com/api/location/" + id, HashMap.class);
+        Map<String, Map> weatherMap = restTemplate.getForObject(queryWeatherById + id, HashMap.class);
         return weatherMap;
     }
-    @Override
-    //String city = "chicago,santa monica, new york"
+
     public List<Map> getWeather(String cities) {
             List<Map> weatherList = new ArrayList<>();
             String[] cityArray = cities.split(",");
@@ -44,7 +44,7 @@ public class SearchServiceImp implements SearchService{
             //            cities.addAll(Arrays.asList(cityArray));
             List<City[]> cityList = new ArrayList<>();
         for (String s : cityArray) {
-            City[] city = restTemplate.getForObject("https://www.metaweather.com/api/location/search/?query= " + s, City[].class);
+            City[] city = restTemplate.getForObject(queryWeatherByCity + s, City[].class);
             cityList.add(city);
         }
         List<List<Integer>> citiesList = new ArrayList<>();
@@ -57,15 +57,6 @@ public class SearchServiceImp implements SearchService{
                 }
                 citiesList.add(cityId);
         }
-//            for (City[] key : cityList) {
-//                List<Integer> cityId = new ArrayList<>();
-//                for (City c : key) {
-//                    if (c != null && c.getWoeid() != null) {
-//                        cityId.add(c.getWoeid());
-//                    }
-//                }
-//                citiesList.add(cityId);
-//            }
         for (List<Integer> cityId : citiesList) {
             for (int id : cityId) {
                 weatherList.add(getWeatherById(id));
@@ -73,6 +64,23 @@ public class SearchServiceImp implements SearchService{
         }
         return weatherList;
     }
+//    @Override
+//    public List<Map> getWeather(String cities) {
+//        List<Map> weatherList = new ArrayList<>();
+//        List<Integer> cityList = new ArrayList<>();
+//        City[] city = restTemplate.getForObject( queryWeatherByCity + cities, City[].class);
+//        for (City c : city) {
+//            if (c != null && c.getWoeid() != null) {
+//                cityList.add(c.getWoeid());
+//            }
+//        }
+//        for (int id : cityList) {
+//
+//            weatherList.add(getWeatherById(id));
+//        }
+//
+//        return weatherList;
+//    }
 }
 /*
 * idea:
