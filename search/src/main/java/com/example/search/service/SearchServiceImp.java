@@ -1,7 +1,6 @@
 package com.example.search.service;
 
 import com.example.search.dto.City;
-import com.example.search.exception.CityNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -38,11 +37,9 @@ public class SearchServiceImp implements SearchService{
     }
 
     public List<Map> getWeather(String cities) {
-            List<Map> weatherList = new ArrayList<>();
-            String[] cityArray = cities.split(",");
-            //            List<String> cities = new ArrayList<>();
-            //            cities.addAll(Arrays.asList(cityArray));
-            List<City[]> cityList = new ArrayList<>();
+        List<Map> weatherList = new ArrayList<>();
+        String[] cityArray = cities.split(",");
+        List<City[]> cityList = new ArrayList<>();
         for (String s : cityArray) {
             City[] city = restTemplate.getForObject(queryWeatherByCity + s, City[].class);
             cityList.add(city);
