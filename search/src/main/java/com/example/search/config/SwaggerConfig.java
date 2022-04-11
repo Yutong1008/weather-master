@@ -16,20 +16,20 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
     @Bean
     public Docket createSwagger(){
-        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())
+        return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.example.search.controller.SearchController"))
                 .paths(PathSelectors.any()).build();
     }
 
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("Weather Search Service")
-                .description("By use this service we can search one or more weather information of cities")
-                .termsOfServiceUrl("http://localhost:9001/weather/search")
-                .version("1.0")
-                .build();
-
-    }
+//    private ApiInfo apiInfo() {
+//        return new ApiInfoBuilder()
+//                .title("Weather Search Service")
+//                .description("By use this service we can search one or more weather information of cities")
+//                .termsOfServiceUrl("http://localhost:9001/weather/search")
+//                .version("1.0")
+//                .build();
+//
+//    }
 
 }

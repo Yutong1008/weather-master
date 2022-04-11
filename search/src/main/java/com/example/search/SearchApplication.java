@@ -30,8 +30,8 @@ public class SearchApplication {
     public Info apiInfo() {
         Info info = new Info();
         info
-                .title("Live Code API")
-                .description("Live Code System Swagger Open API")
+                .title("Weather")
+                .description("Weather Search by City or Cities System Swagger Open API")
                 .version("v1.0.0");
         return info;
     }
