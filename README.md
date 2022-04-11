@@ -17,6 +17,9 @@ Requirement:
     
       ✅ 2. user can send multiple city names to search service and your response should return different cities' weather
     /search?cities=chi,ashburn,x2,x3
+    
+      ✅ 5. current project doesn't have any api documents(swagger)
+
  
 * Partially done. Still working on it...
  
@@ -33,7 +36,6 @@ Requirement:
               put co-relation id in thread local
               clean up thread local id before give response
 
-      5. current project doesn't have any api documents(swagger)
       6. current project doesn't have any exception handling
 
       * no fail tolerance if other services couldn't respond(retry / circuit breaker(hystrix))
