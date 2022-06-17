@@ -9,4 +9,6 @@ import java.util.Map;
 public interface WeatherService {
     List<Integer> findCityIdByName(String city);
     Map<String, Map> findCityNameById(int id);
+
+    List<Map> getWeather(String cities);
 }

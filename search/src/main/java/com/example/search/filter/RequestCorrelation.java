@@ -1,6 +1,7 @@
 package com.example.search.filter;
 
-public class RequestCorrelation {
+
+public class RequestCorrelation  {
     public static final String CORRELATION_ID_HEADER = "correlationId";
 
 
@@ -13,6 +14,8 @@ public class RequestCorrelation {
     public static void setId(String correlationId) {
         id.set(correlationId);
     }
-
+    public static void unload(String CORRELATION_ID_HEADER) {
+        id.remove();
+    }
 }
 
