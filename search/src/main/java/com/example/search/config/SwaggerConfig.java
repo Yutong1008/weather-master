@@ -21,15 +21,4 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.example.search.controller.SearchController"))
                 .paths(PathSelectors.any()).build();
     }
-
-//    private ApiInfo apiInfo() {
-//        return new ApiInfoBuilder()
-//                .title("Weather Search Service")
-//                .description("By use this service we can search one or more weather information of cities")
-//                .termsOfServiceUrl("http://localhost:9001/weather/search")
-//                .version("1.0")
-//                .build();
-//
-//    }
-
 }

@@ -7,7 +7,10 @@ import java.util.Map;
 
 @Service
 public interface SearchService {
-    List<Integer> getWeatherByCity(String city);
+//    static CompletableFuture<List<Map>> getWeather() {
+//    }
+
+    List<Integer> getIdByCity(String city);
     Map<String, Map> getWeatherById(int id);
     List<Map> getWeather(String cities);
 

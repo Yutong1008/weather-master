@@ -1,17 +1,16 @@
 package com.example.search.service;
 
-import com.example.search.dto.City;
+import com.example.search.exception.CityNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
+
 @Service
 public class SearchServiceImp implements SearchService{
     private final RestTemplate restTemplate;
-    public static final String queryWeatherByCity = "https://www.metaweather.com/api/location/search/?query=";
-    public static final String queryWeatherById = "https://www.metaweather.com/api/location/";
     @Autowired
     public SearchServiceImp (RestTemplate restTemplate){
         this.restTemplate = restTemplate;
@@ -19,47 +18,35 @@ public class SearchServiceImp implements SearchService{
 
     @Override
     @Retryable(include = IllegalAccessError.class)
-    public List<Integer> getWeatherByCity(String city) {
-//        Map<String, String> cityMap = Collections.singletonMap("Malibu","Santa Monica");
-            City[] cities = restTemplate.getForObject(queryWeatherByCity + city, City[].class);
-            List<Integer> ans = new ArrayList<>();
-            for (City c : cities) {
-                if (c != null && c.getWoeid() != null) {
-                    ans.add(c.getWoeid());
-                }
-            }
-            return ans;
-    }
-    @Override
-    public Map<String, Map> getWeatherById(int id) {
-        Map<String, Map> weatherMap = restTemplate.getForObject(queryWeatherById + id, HashMap.class);
-        return weatherMap;
+    public List<Integer> getIdByCity(String city) {
+        List<Integer> list = restTemplate.getForObject("http://weather-details-service/details?city=" + city, List.class);
+            return list;
     }
 
+    @Override
+    public Map<String, Map> getWeatherById(int id) {
+        Map<String, Map> weatherMap = restTemplate.getForObject("http://weather-details-service/details/" + id, Map.class);
+        return weatherMap;
+    }
+    @Override
     public List<Map> getWeather(String cities) {
-        List<Map> weatherList = new ArrayList<>();
-        String[] cityArray = cities.split(",");
-        List<City[]> cityList = new ArrayList<>();
-        for (String s : cityArray) {
-            City[] city = restTemplate.getForObject(queryWeatherByCity + s, City[].class);
-            cityList.add(city);
-        }
-        List<List<Integer>> citiesList = new ArrayList<>();
-        for (City[] city : cityList) {
-            List<Integer> cityId = new ArrayList<>();
-                for (City c : city) {
-                    if (c != null && c.getWoeid() != null) {
-                        cityId.add(c.getWoeid());
-                    }
-                }
-                citiesList.add(cityId);
-        }
-        for (List<Integer> cityId : citiesList) {
-            for (int id : cityId) {
-                weatherList.add(getWeatherById(id));
+        try {
+            List<Map> weatherList = new ArrayList<>();
+            String[] cityArray = cities.split(",");
+            List<List<Integer>> cityList = new ArrayList<>();
+            for (String s : cityArray) {
+                List<Integer> list = restTemplate.getForObject("http://weather-details-service/details?city=" + s, List.class);
+                cityList.add(list);
             }
+            for (List<Integer> cityId : cityList) {
+                for (int id : cityId) {
+                    weatherList.add(getWeatherById(id));
+                }
+            }
+            return weatherList;
+        } catch(Exception e) {
+            throw new CityNotFound("Not found this city");
         }
-        return weatherList;
     }
 //    @Override
 //    public List<Map> getWeather(String cities) {

@@ -42,4 +42,31 @@ public class WeatherServiceImpl implements WeatherService{
         Map<String, Map> ans = restTemplate.getForObject(EndpointConfig.queryWeatherById + id, HashMap.class);
         return ans;
     }
+    @Override
+    public List<Map> getWeather(String cities) {
+        List<Map> weatherList = new ArrayList<>();
+        String[] cityArray = cities.split(",");
+        List<City[]> cityList = new ArrayList<>();
+        for (String s : cityArray) {
+            City[] city = restTemplate.getForObject(EndpointConfig.queryWeatherByCity+ s, City[].class);
+            cityList.add(city);
+        }
+        List<List<Integer>> citiesList = new ArrayList<>();
+        for (City[] city : cityList) {
+            List<Integer> cityId = new ArrayList<>();
+            for (City c : city) {
+                if (c != null && c.getWoeid() != null) {
+                    cityId.add(c.getWoeid());
+                }
+            }
+            citiesList.add(cityId);
+        }
+        for (List<Integer> cityId : citiesList) {
+            for (int id : cityId) {
+                weatherList.add(findCityNameById(id));
+            }
+        }
+        return weatherList;
+    }
 }
+
